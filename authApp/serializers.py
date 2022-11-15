@@ -10,6 +10,8 @@ from rest_framework.request import Request
 # https://medium.com/django-rest/django-rest-framework-login-and-register-user-fd91cf6029d5
 
 
+
+##############################################[ RegisterSerializer ]############################################################
 class RegisterSerializer(serializers.HyperlinkedModelSerializer):
     username = serializers.CharField(required=True,
                                      validators=[UniqueValidator(queryset=UserModel.objects.all())]
@@ -123,3 +125,21 @@ class RegisterSerializer(serializers.HyperlinkedModelSerializer):
 
 
 
+##############################################[ LoginSerializer ]############################################################
+class LoginSerializer(serializers.ModelSerializer):
+
+    username = serializers.CharField(required=True,
+                                     validators=[UniqueValidator(queryset=UserModel.objects.all())]
+    )
+    password  = serializers.CharField(max_length=16, 
+                                      min_length=8, 
+                                      write_only=True,
+                                      required=True,
+                                      help_text='Password must be more than 8 Characters.',
+                                      style={'input_type': 'password', 'placeholder': 'Password'}
+    )
+    class Meta:
+        model = UserModel
+        fields = ('username', 'password')
+
+        # read_only_fields = ['token']
