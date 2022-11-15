@@ -31,14 +31,17 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # local app
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # local aPP
-    'authApp.apps.AuthappConfig'
+    # my app
+    'authApp.apps.AuthappConfig',
+    # Django Rest Framework
+    'rest_framework',
     
 ]
 

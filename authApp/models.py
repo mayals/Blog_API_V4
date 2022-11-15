@@ -114,7 +114,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
     gender          = models.CharField(choices=GENDER_CHOICES, default='F', max_length=6)
     born_date       = models.DateTimeField(null = True)  
     country         = models.CharField(max_length=30, blank=True, null = True)
-    avatar          = models.ImageField(upload_to = "avatar/%Y/%m/%d/", blank=True, null=True)
+    avatar          = models.ImageField(upload_to = "avatars/%Y/%m/%d/", blank=True, null=True)
     bio             = models.TextField(max_length=500, null=True, blank=True)
     website         = models.URLField(max_length=200, null=True, blank=True)
    
