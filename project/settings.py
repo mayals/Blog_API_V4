@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # local aPP
+    'authApp.apps.AuthappConfig'
+    
 ]
 
 MIDDLEWARE = [
@@ -123,3 +126,8 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# https://docs.djangoproject.com/en/3.2/topics/auth/customizing/#substituting-a-custom-user-model
+# AUTH_USER_MODEL = 'myapp.MyUser'
+AUTH_USER_MODEL = 'authApp.UserModel'
