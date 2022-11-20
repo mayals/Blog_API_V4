@@ -84,7 +84,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
                                 editable = True
     )
     first_name      = models.CharField(max_length=50, null=True, blank=True)
-    last_name       = models.CharField(max_length=50 ,null=True, blank=True)
+    last_name       = models.CharField(max_length=50, null=True, blank=True)
     is_staff        = models.BooleanField(
                                 default=False,
                                 help_text="Designates whether the user can log into this admin site.",

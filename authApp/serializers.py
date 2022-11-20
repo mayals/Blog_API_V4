@@ -88,26 +88,27 @@ class RegisterSerializer(serializers.HyperlinkedModelSerializer):
     # https://www.django-rest-framework.org/api-guide/serializers/#handling-saving-related-instances-in-model-manager-classes
     # https://www.django-rest-framework.org/api-guide/serializers/#additional-keyword-arguments
     # https://github.com/LondonAppDev/course-rest-api/blob/master/src/profiles_project/profiles_api/serializers.py
-    def create(self,validated_data):
-        
-        user = UserModel( 
-                    username = validated_data['username'], 
-                    email = validated_data['email'],
-                    first_name = validated_data['first_name'],
-                    last_name = validated_data['last_name'],
-                    gender = validated_data['gender'],
-                    born_date = validated_data['born_date'],
-                    country = validated_data['country'],
-                    avatar = validated_data['avatar'],
-                    bio = validated_data['bio'],
-                    website = validated_data['website'],                                         
-        )  
+
+
+    def create(self, validated_data):
+        user = UserModel(
+                        email      = validated_data['email'],
+                        username   = validated_data['username'],
+                        first_name = validated_data['first_name'],
+                        last_name  = validated_data['last_name'],
+                        gender     = validated_data['gender'],
+                        born_date  = validated_data['born_date'],
+                        country    = validated_data['country'],
+                        avatar     = validated_data['avatar'],
+                        bio        = validated_data['bio'],
+                        website    = validated_data['website']
+        )
         user.set_password(validated_data['password'])
         user.save()
-        print(user)
         return user
 
 
+    
     
 
     def update(self, instance, validated_data):
