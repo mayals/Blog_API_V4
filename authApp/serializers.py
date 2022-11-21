@@ -14,10 +14,14 @@ from rest_framework.request import Request
 ##############################################[ RegisterSerializer ]############################################################
 class RegisterSerializer(serializers.HyperlinkedModelSerializer):
     username = serializers.CharField(required=True,
+                                     help_text='username must be uniqe.',
+                                     style={'placeholder': 'username here ..'},
                                      validators=[UniqueValidator(queryset=UserModel.objects.all())]
     )
     email = serializers.EmailField(
                                     required=True,
+                                    style={'placeholder': 'email here ..'},
+                                    help_text='Enter correct email.',
                                     validators=[UniqueValidator(queryset=UserModel.objects.all())]
     )
     password  = serializers.CharField(max_length=16, 
@@ -130,14 +134,17 @@ class RegisterSerializer(serializers.HyperlinkedModelSerializer):
 class LoginSerializer(serializers.ModelSerializer):
 
     username = serializers.CharField(required=True,
+                                     style={'placeholder': 'username here ..'},
+                                     help_text='Enter your username.',
                                      validators=[UniqueValidator(queryset=UserModel.objects.all())]
     )
-    password  = serializers.CharField(max_length=16, 
+    password  = serializers.CharField(
+                                      max_length=16, 
                                       min_length=8, 
                                       write_only=True,
                                       required=True,
-                                      help_text='Password must be more than 8 Characters.',
-                                      style={'input_type': 'password', 'placeholder': 'Password'}
+                                      help_text='Enter your password.',
+                                      style={'input_type': 'password', 'placeholder': 'password here ..'}
     )
     class Meta:
         model = UserModel
