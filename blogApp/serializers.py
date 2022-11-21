@@ -12,7 +12,7 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.UUIDField(read_only=True)
     name = serializers.CharField(validators=[
                                             maxLengthValidator,
-                                            requiredValidator,# this notwork!
+                                            # requiredValidator,# this notwork!
                                             UniqueValidator(queryset=Category.objects.all(),message='يجب أن يكون أسم التصنيف غير مكرر')
                                             ])
     description    = serializers.CharField(required=False) 
@@ -23,19 +23,22 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
 
     # not work ..no chage has done in message!
     # https://stackoverflow.com/questions/30565389/django-rest-framework-how-to-create-custom-error-messages-for-all-modelseriali
-    def __init__(self, *args, **kwargs):
-        super(CategorySerializer, self).__init__(*args, **kwargs)
+    # def __init__(self, *args, **kwargs):
+    #     super(CategorySerializer, self).__init__(*args, **kwargs)
 
-        self.fields['name'].error_messages['required'] = 'This field is required'
-        self.fields['name'].error_messages['read_only'] = 'NO EDIT ALOWED'
+    #     self.fields['name'].error_messages['required'] = 'This field is required'
+    #     self.fields['name'].error_messages['read_only'] = 'NO EDIT ALOWED'
     
     
     # not work ..no chage has done in message!
     # https://www.django-rest-framework.org/api-guide/serializers/#field-level-validation
-    def validate_name(self,value):
-        if value is None:
-            raise serializers.ValidationError("This field is required",status.HTTP_400_BAD_REQUEST)
-        return value
+    # def validate_name(self,value):
+    #     if value is None:
+    #         raise serializers.ValidationError("This field is required",status.HTTP_400_BAD_REQUEST)
+    #     return value
+
+    def create(self, validated_data):
+        return Category.objects.create(**validated_data)
 
 
     # work ok all :) to make "name" not allowed for update
@@ -43,20 +46,19 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
     def update(self, instance, validated_data):
         validated_data.pop('name')                         # validated_data no longer has name     
         super().update(instance, validated_data)
-        raise serializers.ValidationError("This field not allowed to update",status.HTTP_400_BAD_REQUEST) 
+        raise serializers.ValidationError("This field - Name - not allowed to update",status.HTTP_400_BAD_REQUEST) 
          
-
 
     class Meta:
         model            = Category 
         fields           = ['id','name','description','date_add','date_update','url','posts_category'] 
         read_only_fields = ('name','id','url')
-        extra_kwargs     = {
-                            "name": {
-                                "error_messages": { "required": "Please This field is required" },
-                                "max_length": 20  
-                            }
-        }
+        # extra_kwargs     = {
+        #                     "name": {
+        #                         "error_messages": { "required": "Please This field is required" },
+        #                         "max_length": 20  
+        #                     }
+        # }
 
         # extra_kwargs = {
         #             'name' : {'required' : True },

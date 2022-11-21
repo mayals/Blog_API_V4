@@ -7,7 +7,7 @@ import uuid
 #----------------------------------------[  Category  ]----------------------------------------------------#
 class Category(models.Model):
     id          = models.UUIDField(primary_key=True, editable=False,default=uuid.uuid4)
-    name        = models.CharField(max_length=20,unique=True,null=True,blank=False)
+    name        = models.CharField(max_length=20, editable=False, unique=True,null=True,blank=False)
     slug        = models.SlugField(max_length=25, blank=True, null=True)
     description = models.TextField(null =True,blank=True)
     date_add    = models.DateTimeField(auto_now=False, auto_now_add=True)
