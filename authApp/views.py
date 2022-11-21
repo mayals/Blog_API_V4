@@ -91,7 +91,7 @@ for user in UserModel.objects.all():
 class UserListAPIView(GenericAPIView):
     queryset = UserModel.objects.all()
     serializer_class = RegisterSerializer
-    permission_classes = [IsAdminUser]
+    # permission_classes = [IsAdminUser]
    
     # get all users
     def get(self, request, format=None):
@@ -103,7 +103,7 @@ class UserListAPIView(GenericAPIView):
 class UserDetailAPIView(GenericAPIView):
     queryset = UserModel.objects.all()
     serializer_class = RegisterSerializer
-    permission_classes = [IsAdminUser]
+    # permission_classes = [IsAdminUser]
     lookup_field = 'username'
     
     def get_object(self,username):

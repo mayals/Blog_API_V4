@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # my app
     'authApp.apps.AuthappConfig',
+    'blogApp.apps.BlogappConfig',
     # Django Rest Framework
     'rest_framework',
     #tokenauthentication
@@ -136,3 +137,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # https://docs.djangoproject.com/en/3.2/topics/auth/customizing/#substituting-a-custom-user-model
 # AUTH_USER_MODEL = 'myapp.MyUser'
 AUTH_USER_MODEL = 'authApp.UserModel'
+
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
