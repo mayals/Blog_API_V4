@@ -3,7 +3,7 @@ from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
 
 
-
+app_name = 'authApp'
 urlpatterns = [
     # only for admin (.is_staff)
     path('users-list/',views.UserListAPIView.as_view(), name='users-list'),
