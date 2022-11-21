@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     'authApp.apps.AuthappConfig',
     # Django Rest Framework
     'rest_framework',
-    
+    #tokenauthentication
+    # https://www.django-rest-framework.org/api-guide/authentication/#tokenauthentication
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [

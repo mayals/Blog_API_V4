@@ -7,6 +7,10 @@ from rest_framework.permissions import IsAdminUser
 from django.http import Http404
 from django.contrib.auth import authenticate
 
+# https://www.django-rest-framework.org/api-guide/authentication/#by-exposing-an-api-endpoint
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
+
 # https://www.django-rest-framework.org/api-guide/generic-views/#genericapiview
 # get requst user (only current-user can view)
 class AuthUserAPIView(GenericAPIView):
@@ -36,8 +40,9 @@ class UserRegisterAPIView(GenericAPIView):
         return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-# Login - login user .. 
+# not using now because login without token (bad login same as BasicAuthentication ) 
+# Login - login user before token installed.. 
+# username and password login(before i install --> (rest_framework.authtoken) ,so no token ther)
 class UserLoginAPIView(GenericAPIView):
     authentication_classes = []
     serializer_class = LoginSerializer
@@ -52,7 +57,24 @@ class UserLoginAPIView(GenericAPIView):
         return response.Response({'message': "Invalid credentials, please try again"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-
+# https://www.django-rest-framework.org/api-guide/authentication/#tokenauthentication
+# username and password to get token and login(after i install --> (rest_framework.authtoken) ,token must enter there)
+class CustomAuthToken(ObtainAuthToken):
+        
+    def post(self, request, *args, **kwargs):
+        # print(self.serializer_class) 
+        # <class 'rest_framework.authtoken.serializers.AuthTokenSerializer'>
+        serializer = self.serializer_class(data=request.data,context={'request': request})                                       
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return response.Response({
+                                'token': token.key,
+                                'user_id': user.pk,
+                                'user_username': user.username,
+                                'email': user.email,
+                                'message': 'you are now login by way called :TokenAuthentication , using --> rest_framework.authtoken'
+        })
 
 
 
