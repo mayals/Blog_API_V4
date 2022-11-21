@@ -78,6 +78,14 @@ class CustomAuthToken(ObtainAuthToken):
 
 
 
+
+#https://www.django-rest-framework.org/api-guide/authentication/#generating-tokens 
+# If you've already created some users, you can generate tokens for all existing users like this:
+for user in UserModel.objects.all():
+    Token.objects.get_or_create(user=user)
+        
+
+
 ###############################################################################
  # for admin only to see all users and their details
 class UserListAPIView(GenericAPIView):
