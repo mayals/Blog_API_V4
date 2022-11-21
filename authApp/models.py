@@ -119,7 +119,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
     avatar          = models.ImageField(upload_to = "avatars/%Y/%m/%d/", blank=True, null=True)
     bio             = models.TextField(max_length=500, null=True, blank=True)
     website         = models.URLField(max_length=200, null=True, blank=True)
-   
+    
 
     objects = UserModelManger()
 

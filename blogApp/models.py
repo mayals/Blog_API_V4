@@ -2,7 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
 import uuid
-
+from authApp.models import UserModel
 
 #----------------------------------------[  Category  ]----------------------------------------------------#
 class Category(models.Model):
@@ -33,9 +33,9 @@ class Category(models.Model):
 class Post(models.Model):
     id          = models.UUIDField(primary_key=True, editable=False,default=uuid.uuid4)
     category    = models.ForeignKey(Category,on_delete=models.CASCADE,null=True,blank=False,related_name="posts_category")
-    title       = models.CharField(max_length=20,null=True,blank=False)
+    title       = models.CharField(max_length=20, editable=False, null=True,blank=False)
     slug        = models.SlugField(max_length=25, blank=True, null=True)
-    author      = models.CharField(max_length=100,null=True,blank=False)
+    author      = models.ForeignKey(UserModel,on_delete=models.CASCADE,related_name='posts_author',null=True,blank=False)
     body        = models.TextField(null=True,blank=False)
     date_add    = models.DateTimeField(auto_now=False, auto_now_add=True)
     date_update = models.DateTimeField(auto_now=True,  auto_now_add=False)

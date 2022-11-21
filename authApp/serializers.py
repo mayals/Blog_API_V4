@@ -39,9 +39,14 @@ class RegisterSerializer(serializers.HyperlinkedModelSerializer):
                                       style={'input_type': 'password', 'placeholder': 'Password2'}
     )
     url = serializers.HyperlinkedIdentityField(read_only=True,
-                                               view_name='UserModel-detail',
+                                               view_name='authApp:UserModel-detail',
                                                lookup_field='username',
                                               
+    )
+    posts_author =  serializers.HyperlinkedRelatedField(read_only=True,
+                                                        view_name='blogApp:post-detail', 
+                                                        many=True,
+                                                        lookup_field='slug'
     )
     
 
@@ -49,10 +54,10 @@ class RegisterSerializer(serializers.HyperlinkedModelSerializer):
         model  = UserModel 
         fields = [
             'username','email','password','password2',
-            'first_name','last_name','gender','born_date','country','avatar','bio','website','url'
+            'first_name','last_name','gender','born_date','country','avatar','bio','website','url','posts_author'
         ]
         write_only_fields = ['password','password2']
-        read_only_fields = ['url']
+        read_only_fields = ['url','posts_author']
         # extra_kwargs = {'password': {'write_only': True}}
         
         extra_kwargs = {
