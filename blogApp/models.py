@@ -64,7 +64,7 @@ class Comment(models.Model):
     id          = models.UUIDField(primary_key=True, editable=False,default=uuid.uuid4)
     post        = models.ForeignKey(Post,on_delete=models.CASCADE,null=True,blank=False,related_name="comments_post")
     text        = models.TextField(null=True,blank=False)
-    comment_by  = models.CharField(max_length=100,null=True,blank=False)
+    comment_by  = models.ForeignKey(UserModel,on_delete=models.CASCADE,related_name='comments_author',null=True,blank=False)
     allowed     = models.BooleanField(default=False)
     date_add    = models.DateTimeField(auto_now=False, auto_now_add=True)
     date_update = models.DateTimeField(auto_now=True,  auto_now_add=False)

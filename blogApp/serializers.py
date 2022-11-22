@@ -99,7 +99,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
     
     
     url           = serializers.HyperlinkedIdentityField(read_only=True,view_name='blogApp:post-detail',lookup_field='slug')  
-    comments_post = serializers.HyperlinkedRelatedField(read_only=True,view_name='comment-detail',many=True)
+    comments_post = serializers.HyperlinkedRelatedField(read_only=True,view_name='blogApp:comment-detail',many=True)
     
      
     class Meta:
@@ -134,7 +134,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
 
 
-class CommentSerializer(serializers.HyperlinkedModelSerializer):
+class CommentSerializer(serializers.ModelSerializer):
     id            = serializers.UUIDField(read_only=True)    
     post          = serializers.SlugRelatedField(
                                                 queryset = Post.objects.all(),
@@ -142,10 +142,14 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
     ) 
     
     text          = serializers.CharField(required=True,style={'base_template': 'textarea.html'} ) 
-    comment_by    = serializers.CharField(required=True)
+    comment_by    = serializers.SlugRelatedField(
+                                                queryset = UserModel.objects.all(),
+                                                slug_field = 'username'  # to display category_id asredable  use name field  insead of id field 
+                                                ) 
     allowed       = serializers.BooleanField(default=False)
     
 
     class Meta:
         model  = Comment 
         fields = ['id','post','text','comment_by','allowed'] 
+        read_only_fields = ('id',)

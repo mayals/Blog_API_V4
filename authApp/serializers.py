@@ -48,6 +48,11 @@ class RegisterSerializer(serializers.HyperlinkedModelSerializer):
                                                         many=True,
                                                         lookup_field='slug'
     )
+    comments_author =  serializers.HyperlinkedRelatedField(read_only=True,
+                                                        view_name='blogApp:comment-detail', 
+                                                        many=True,
+                                                        lookup_field='slug'
+    )
     
 
     class Meta:
