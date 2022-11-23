@@ -13,48 +13,18 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
+from blogApp.models import Post
 
+from .user_manager import UserModelManger
+import uuid
 
 # https://github.com/django/django/blob/main/django/contrib/auth/models.py#L136
-class UserModelManger(BaseUserManager):
-    def _create_user(self, username, email, password, **extra_fields):
-        """
-        Create and save a user with the given username, email, and password.
-        """
-        if not username:
-            raise ValueError('The given username must be set')
-
-        if not email:
-            raise ValueError('The given email must be set')
-
-        email = self.normalize_email(email)
-        username = self.model.normalize_username(username)
-        user = self.model(username=username, email=email, **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_user(self, username, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', False)
-        extra_fields.setdefault('is_superuser', False)
-        return self._create_user(username, email, password, **extra_fields)
-
-    def create_superuser(self, username, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser must have is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must have is_superuser=True.')
-
-        return self._create_user(username, email, password, **extra_fields)
-
-
-
 
 
 # https://github.com/django/django/blob/main/django/contrib/auth/models.py#L334
+
+#----------------------------------------[  UserModel  ]----------------------------------------------------#
+
 class UserModel(AbstractBaseUser, PermissionsMixin):
     """
     Users within the Django authentication system are represented by this model.
@@ -68,9 +38,11 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
                     (M,'Male'),
                     (F,'Female'),
     ] 
-
     username_validator = UnicodeUsernameValidator()
 
+
+ 
+    id              = models.UUIDField(primary_key=True, editable=False,default=uuid.uuid4)
     username        = models.CharField(  
                                 max_length=50,
                                 null = True,
@@ -87,6 +59,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
     )
     first_name      = models.CharField(max_length=50, null=True, blank=True)
     last_name       = models.CharField(max_length=50, null=True, blank=True)
+    favorites       = models.ManyToManyField(Post, related_name='users_favos', null=True, blank=True)
     is_staff        = models.BooleanField(
                                 default=False,
                                 help_text="Designates whether the user can log into this admin site.",
@@ -102,12 +75,6 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
                                         null=True
                                         
     )
-    # need this password 2 in serializer.py when need to check entered values
-    # password2       = models.CharField( max_length=16,
-    #                                     validators=[MinLengthValidator(8)],
-    #                                     # editable = False,
-    #                                     null=True
-    # )
     # Last login    this field --> come as default from AbstractBaseUser
     
     # ------------------------------- my extra fields --- you can add more fields ------------------------------------------
@@ -132,7 +99,8 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
             verbose_name = 'UserModel'
             verbose_name_plural = 'UsersModel'
 
-
+    
+           
 
     def clean(self):
         super().clean()
@@ -161,6 +129,3 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
             Token.objects.create(user=instance)
 
 
-  
-
-    
