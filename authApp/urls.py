@@ -26,7 +26,7 @@ urlpatterns = [
 
     # only for admin (.is_staff)
     path('users-list/',views.UserListAPIView.as_view(), name='users-list'),
-    path('user-detail/<slug:username>/',views.UserDetailAPIView.as_view(), name='UserModel-detail'),
+    path('user-get/<slug:username>/',views.UserDetailAPIView.as_view(), name='UserModel-detail'),
     path('user-get-update-delete/<slug:username>/',views.user_get_update_delete, name='user-get-update-delete'),
     
 
