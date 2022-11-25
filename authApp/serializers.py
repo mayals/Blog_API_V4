@@ -59,14 +59,18 @@ class RegisterSerializer(serializers.HyperlinkedModelSerializer):
         model  = UserModel 
         fields = [
             'username','email','password','password2',
-            'first_name','last_name','gender','born_date','country','avatar','bio','website','url','posts_author'
+            'first_name','last_name','gender','born_date','country','avatar','bio','website',
+            'url','posts_author','comments_author','favorites'
         ]
         write_only_fields = ['password','password2']
-        read_only_fields = ['url','posts_author']
+        read_only_fields = ['url','posts_author','comments_author',]
         # extra_kwargs = {'password': {'write_only': True}}
         
         extra_kwargs = {
-            'url': {'view_name': 'UserModel-detail', 'lookup_field': 'username'},
+                        'url': {   
+                                'view_name'   : 'UserModel-detail', 
+                                'lookup_field': 'username'
+                               },
             # 'users': {'lookup_field': 'username'}
         }
 
