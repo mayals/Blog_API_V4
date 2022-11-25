@@ -165,3 +165,73 @@ class LoginSerializer(serializers.ModelSerializer):
         fields = ('username', 'password')
 
         # read_only_fields = ['token']
+
+
+
+#---------------------------------------[ ProfileSerializer ]------------------------------------
+class ProfileSerializer(serializers.HyperlinkedModelSerializer):
+    
+    email = serializers.EmailField(
+                                    required=True,
+                                    style={'placeholder': 'email here ..'},
+                                    help_text='Enter correct email.',
+                                    validators=[UniqueValidator(queryset=UserModel.objects.all())]
+    )
+    
+    url = serializers.HyperlinkedIdentityField(read_only=True,
+                                               view_name='authApp:UserModel-detail',
+                                               lookup_field='username',
+                                              
+    )
+    posts_author =  serializers.HyperlinkedRelatedField(read_only=True,
+                                                        view_name='blogApp:post-detail', 
+                                                        many=True,
+                                                        lookup_field='slug'
+    )
+    comments_author =  serializers.HyperlinkedRelatedField(read_only=True,
+                                                        view_name='blogApp:comment-detail', 
+                                                        many=True,
+                                                        lookup_field='slug'
+    )
+    
+
+    class Meta:
+        model  = UserModel 
+        fields = [
+            'email','first_name','last_name','gender','born_date','country','avatar','bio','website',
+            'url','posts_author','comments_author','favorites'
+        ]
+        read_only_fields = ['url','posts_author','comments_author',]
+        # extra_kwargs = {'password': {'write_only': True}}
+        
+        extra_kwargs = {
+                        'url': {   
+                                'view_name'   : 'UserModel-detail', 
+                                'lookup_field': 'username'
+                               },
+            # 'users': {'lookup_field': 'username'}
+        }
+
+
+    def validate_email(self, value): # work ok :)
+        if value is None:
+            raise serializers.ValidationError("email field is required",status.HTTP_400_BAD_REQUEST)
+        if UserModel.objects.filter(email=value).exists() == True:
+            raise serializers.ValidationError(f" '{value}'  this email already been used. Try another email.",status.HTTP_400_BAD_REQUEST)
+        return value # the output here is validated email only
+
+
+    def update(self, instance, validated_data): # work ok 
+        instance.email      = validated_data.get('email', instance.email)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name  = validated_data.get('last_name', instance.last_name)
+        instance.gender     = validated_data.get('gender', instance.gender)
+        instance.born_date  = validated_data.get('born_date', instance.born_date)
+        instance.country    = validated_data.get('country', instance.country)
+        instance.avatar     = validated_data.get('avatar', instance.avatar)
+        instance.website    = validated_data.get('website', instance.website)
+        instance.bio        = validated_data.get('bio', instance.bio)
+        instance.save()
+        user = UserModel(instance)
+        return user
+
