@@ -6,20 +6,38 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import viewsets
+from rest_framework import permissions
+from rest_framework import authentication
 
 
 
-class Categoryviewset(viewsets.ModelViewSet):
+# POST       method work ok  :) 
+# GET        method work ok  :)
+# GET-Detail method work ok  :)
+# PUT        method work ok  :)
+# DELETE     method work ok  :)
+class Categoryviewset(viewsets.ModelViewSet): 
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     lookup_field = "slug"
-
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes     = [permissions.IsAuthenticatedOrReadOnly]
     
 
+
+
+ 
+# POST       method work ok  :) 
+# GET        method work ok  :)
+# GET-Detail method work ok  :)
+# PUT        method work ok  :)
+# DELETE     method work ok  :)  
 class Postviewset(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     lookup_field = "slug"
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes     = [permissions.IsAuthenticatedOrReadOnly]
 
 
 

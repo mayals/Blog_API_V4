@@ -98,7 +98,7 @@ class UserListAPIView(GenericAPIView): # this is work with pagination (we must r
 
 
 
-    # get all users
+    # get all users not usefull wih pagination :(
     # def get(self, request, format=None): # not work with pagination
     #     # Note the use of `get_queryset()` instead of `self.queryset`
     #     queryset = self.get_paginate_queryset()

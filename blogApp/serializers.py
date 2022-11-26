@@ -35,12 +35,16 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
     # work ok all :) to make "name" not allowed for update
     # https://www.appsloveworld.com/django/100/14/how-to-make-a-field-editable-on-create-and-read-only-on-update-in-django-rest-fra
     def update(self, instance, validated_data):
+        print(validated_data)
         validated_data.pop('name')  # validated_data no longer has name 
+        print(validated_data)
+        if "name" in validated_data:
+            raise serializers.ValidationError("This field - Name - not allowed to update",status.HTTP_400_BAD_REQUEST) 
         instance.description = validated_data.get('description',instance.description)                           
         instance.save()
-        super().update(instance, validated_data)
-        raise serializers.ValidationError("This field - Name - not allowed to update",status.HTTP_400_BAD_REQUEST) 
-         
+        return instance 
+        # super().update(instance, validated_data) # not need
+       
 
     class Meta:
         model            = Category 
@@ -105,29 +109,36 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model            = Post 
         fields           = ['id','category','title','body','author','date_add','date_update','url','comments_post'] 
-        read_only_fields = ('id','comments_post','url')
+        read_only_fields = ('id','comments_post','url','likes','tags')
 
 
     
 
-
-    def create(self, validated_data):
-        author_data = validated_data.pop('author')   # validated_data no longer has author
+    
+    def create(self, validated_data): # work ok :)
+        category_data = validated_data.pop('category') 
+        author_data   = validated_data.pop('author')   # validated_data no longer has author
         post = Post.objects.create(**validated_data)
-        Post.objects.create(post=post, **author_data)
+        post.category = category_data
+        post.author = author_data
+        post.save()
         return post    
 
+   # https://www.django-rest-framework.org/api-guide/serializers/#writable-nested-representations
+    def update(self, instance, validated_data): # work ok :)
+        
+        author_data = validated_data.pop('author')      # validated_data no longer has author
+        author = instance.author                        #  author field  will not updaded(not changed) 
+        
 
-    # work ok all :) to make "name" not allowed for update
-    # https://www.appsloveworld.com/django/100/14/how-to-make-a-field-editable-on-create-and-read-only-on-update-in-django-rest-fra
-    def update(self, instance, validated_data):
-        validated_data.pop('title') # validated_data no longer has title
-        validated_data.pop('author')# validated_data no longer has author
-        instance.category = validated_data.get('category',instance.category)                           
-        instance.body = validated_data.get('body',instance.body)
+        # only these 3 fields (title, category & body) will be updated(change)
+        instance.category = validated_data.get('category', instance.category)
+        instance.title = validated_data.get('title', instance.title) 
+        instance.body = validated_data.get('body', instance.body)
+        super().update(instance, validated_data) # we must update the main class (super)-> (PostSerializer) in order to get right new slug on  a new title
         instance.save()
-        super().update(instance, validated_data)
-        raise serializers.ValidationError("This field - title - not allowed to update",status.HTTP_400_BAD_REQUEST) 
+        return instance
+       
 
 
 

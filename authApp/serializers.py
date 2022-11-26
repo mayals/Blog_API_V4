@@ -142,8 +142,9 @@ class RegisterSerializer(serializers.HyperlinkedModelSerializer):
         user = UserModel(instance)
         return user
 
+        
 
-
+    
 ##############################################[ LoginSerializer ]############################################################
 class LoginSerializer(serializers.ModelSerializer):
 
