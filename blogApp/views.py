@@ -43,4 +43,8 @@ class Postviewset(viewsets.ModelViewSet):
 
 class Commentviewset(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
+    
     serializer_class = CommentSerializer
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes     = [permissions.IsAuthenticatedOrReadOnly]
+

@@ -128,19 +128,19 @@ class RegisterSerializer(serializers.HyperlinkedModelSerializer):
 
     
     
-
-    def update(self, instance, validated_data):
-        instance.first_name = validated_data.get('first_name', instance.first_name)
-        instance.last_name  = validated_data.get('last_name', instance.last_name)
-        instance.gender     = validated_data.get('gender', instance.gender)
-        instance.born_date  = validated_data.get('born_date', instance.born_date)
-        instance.country    = validated_data.get('country', instance.country)
-        instance.avatar     = validated_data.get('avatar', instance.avatar)
-        instance.website    = validated_data.get('website', instance.website)
-        instance.bio        = validated_data.get('bio', instance.bio)
-        instance.save()
-        user = UserModel(instance)
-        return user
+    # DONE LATER IN PROFILE
+    # def update(self, instance, validated_data):
+    #     instance.first_name = validated_data.get('first_name', instance.first_name)
+    #     instance.last_name  = validated_data.get('last_name', instance.last_name)
+    #     instance.gender     = validated_data.get('gender', instance.gender)
+    #     instance.born_date  = validated_data.get('born_date', instance.born_date)
+    #     instance.country    = validated_data.get('country', instance.country)
+    #     instance.avatar     = validated_data.get('avatar', instance.avatar)
+    #     instance.website    = validated_data.get('website', instance.website)
+    #     instance.bio        = validated_data.get('bio', instance.bio)
+    #     instance.save()
+    #     user = UserModel(instance)
+    #     return user
 
         
 
