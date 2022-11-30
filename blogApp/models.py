@@ -9,14 +9,15 @@ import uuid
 #----------------------------------------[  Category  ]----------------------------------------------------#
 class Category(models.Model):
     id          = models.UUIDField(primary_key=True, editable=False,default=uuid.uuid4)
-    name        = models.CharField(max_length=20, editable=False, unique=True,null=True,blank=False)
-    slug        = models.SlugField(max_length=25, blank=True, null=True)
+    name        = models.CharField(max_length=20, editable=False, unique=True,blank=False)
+    slug        = models.SlugField(max_length=25, blank=True)
     description = models.TextField(null =True,blank=True)
     date_add    = models.DateTimeField(auto_now=False, auto_now_add=True)
     date_update = models.DateTimeField(auto_now=True,  auto_now_add=False)
 
+
     def __str__(self):
-        return self.name
+        return str(self.name)
     
     def get_absolute_url(self):
         return reverse('blogApp:category-detail', kwargs = {"slug":self.slug})      #vue view_name='{model_name}-detail'
@@ -52,7 +53,8 @@ class Post(models.Model):
         return self.likes.count()
 
     def __str__(self):
-        return self.title 
+        return str(self.title) 
+    
     class Meta:
         ordering = ['-date_add', 'author']
         unique_together = ['title', 'author']
@@ -69,15 +71,20 @@ class Post(models.Model):
 
 #----------------------------------------[  Tag  ]----------------------------------------------------#
 class Tag(models.Model):
-    id            = models.UUIDField(primary_key=True, editable=False,default=uuid.uuid4)
-    word        = models.CharField(max_length=35)
-    slug        = models.CharField(max_length=250)
-    date_add    = models.DateTimeField(auto_now=False, auto_now_add=True)
+    id          = models.UUIDField(primary_key=True, editable=False,default=uuid.uuid4)
+    word        = models.CharField(max_length=35,unique=True, blank=False)
+    slug        = models.SlugField(max_length=25, blank=True)
+    date_add    = models.DateTimeField(auto_now=False, auto_now_add=True, null=True)
 
     def __str__(self):
-        return self.word
+        return str(self.word)
+    
+    class Meta:
+        ordering = ['-date_add']
 
-
+    def save(self, *args, **kwargs):  
+        self.slug = slugify(self.word)
+        super().save(*args, **kwargs)  # Call the "real" save() method.
 
 
 

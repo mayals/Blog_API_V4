@@ -11,6 +11,7 @@ app_name = 'blogApp'
 
 router.register('category',views.Categoryviewset,basename="category")
 router.register('post',views.Postviewset,basename="post")
+router.register('tag',views.Tagviewset,basename="tag")
 router.register('comment',views.Commentviewset,basename="comment")
 
 

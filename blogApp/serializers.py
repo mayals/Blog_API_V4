@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from . my_validators import requiredValidator,checkTitleValidator,maxLengthValidator
 from rest_framework.validators import UniqueValidator
-from.models import Category,Post,Comment
+from.models import Category,Post,Comment,Tag
 from rest_framework import status
 from authApp.models import UserModel
 
@@ -78,32 +78,36 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
 
     def create(self, validated_data): # work ok :)
-        category_data = validated_data.pop('category')  # validated_data no longer has category
-        author_data   = validated_data.pop('author')    # validated_data no longer has author
-        post          = Post.objects.create(**validated_data)
-        post.category = self.category
-        post.author   = self.context['request'].user 
+        post     = Post(
+        category =  validated_data['category'] , # this field get from categories list 
+        title    =  validated_data['title'] ,  # any title , must be unique
+        body     =  validated_data['body'] ,   # any text body 
+        author   =  self.context['request'].user, # username  get from username list 
+        )
         post.save()
-        return post    
-
+        return post
+        
+       
+       
 
    # https://www.django-rest-framework.org/api-guide/serializers/#writable-nested-representations
     def update(self, instance, validated_data): # work ok :)
-        
-        author_data = validated_data.pop('author')      # validated_data no longer has author
-        author = instance.author                        #  author field  will not updaded(not changed) 
-        
         # only these 3 fields (title, category & body) will be updated(change)
         instance.category = validated_data.get('category', instance.category)
         instance.title    = validated_data.get('title', instance.title) 
         instance.body     = validated_data.get('body', instance.body)
+        author = instance.author   # no update allowed for author  
         super().update(instance, validated_data) # we must update the main class (super)-> (PostSerializer) in order to get right new slug on  a new title
         instance.save()
         return instance
        
 
 
-
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model  = Tag 
+        fields = ['id','word'] 
+        read_only_fields = ('id','slug')
 
 
 
@@ -137,11 +141,12 @@ class CommentSerializer(serializers.ModelSerializer):
         print('self.kwarg =' + str(self.get_extra_kwargs))
         print('validated_data =' + str(validated_data))
 
-        post = validated_data.pop('post')               # validated_data no longer has post
-        comment_by = validated_data.pop('comment_by')   # validated_data no longer has comment_by             
-        
-        comment = Comment.objects.create(**validated_data)
-        comment.post = post
-        comment.comment_by = self.context['request'].user   
+        comment  = Comment (
+        text         =  validated_data['text'] , # ny text 
+        post         =  validated_data['post'] ,  # post get from posts list 
+        comment_by   =  self.context['request'].user, # username  get from username list 
+        )
         comment.save()
-        return comment    
+        return comment
+        
+        

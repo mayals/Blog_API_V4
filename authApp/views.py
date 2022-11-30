@@ -68,9 +68,10 @@ class CustomAuthToken(ObtainAuthToken): # WORK OK :)
 #----------------------------------------[  token creat for all users  ]----------------------------------------------------#
 #https://www.django-rest-framework.org/api-guide/authentication/#generating-tokens 
 # If you've already created some users, you can generate tokens for all existing users like this:
-if UserModel.objects.all().exists():  # WORK OK :)
-    for user in UserModel.objects.all() :
-        Token.objects.get_or_create(user=user)
+# this code must be writen after model is establish and after finished all migrations and migrate :
+# if UserModel.objects.all().exists():  # WORK OK :)
+#     for user in UserModel.objects.all() :
+#         Token.objects.get_or_create(user=user)
 
 
 

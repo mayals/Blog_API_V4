@@ -99,7 +99,8 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
             verbose_name = 'UserModel'
             verbose_name_plural = 'UsersModel'
 
-    
+    def __str__(self):
+        return self.username
            
 
     def clean(self):
