@@ -57,8 +57,8 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
                                 unique=True,
                                 editable = True
     )
-    first_name      = models.CharField(max_length=50, null=True, blank=True)
-    last_name       = models.CharField(max_length=50, null=True, blank=True)
+    first_name      = models.CharField(max_length=50, blank=True, null=True)
+    last_name       = models.CharField(max_length=50, blank=True, null=True)
     favorites       = models.ManyToManyField(Post, related_name='users_favos', null=True, blank=True)
     is_staff        = models.BooleanField(
                                 default=False,
@@ -80,7 +80,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
     # ------------------------------- my extra fields --- you can add more fields ------------------------------------------
     # add more fields:
     # we can now add any extra_fields to this UserModel because we customize user model using inherit from AbstractBaseUser 
-    gender          = models.CharField(choices=GENDER_CHOICES, default='F', max_length=6)
+    gender          = models.CharField(choices=GENDER_CHOICES,max_length=6,null=True)
     born_date       = models.DateTimeField(null = True)  
     country         = models.CharField(max_length=30, blank=True, null = True)
     avatar          = models.ImageField(upload_to = "avatars/%Y/%m/%d/", blank=True, null=True)
@@ -100,7 +100,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
             verbose_name_plural = 'UsersModel'
 
     def __str__(self):
-        return self.username
+        return str(self.username)
            
 
     def clean(self):

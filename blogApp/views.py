@@ -7,9 +7,10 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import viewsets
 from rest_framework import permissions
+from .custom_permissions import IsAuthorOrReadOnly
 from rest_framework import authentication
 
-
+ 
 
 # POST       method work ok  :) 
 # GET        method work ok  :)
@@ -37,7 +38,7 @@ class Postviewset(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     lookup_field = "slug"
     authentication_classes = [authentication.TokenAuthentication]
-    permission_classes     = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes     = [permissions.IsAuthenticated,IsAuthorOrReadOnly]
 
 
  

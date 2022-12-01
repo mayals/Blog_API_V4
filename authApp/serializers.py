@@ -110,16 +110,16 @@ class RegisterSerializer(serializers.HyperlinkedModelSerializer):
 
     def create(self, validated_data):
         user = UserModel(
-                        email      = validated_data['email'],
-                        username   = validated_data['username'],
-                        first_name = validated_data['first_name'],
-                        last_name  = validated_data['last_name'],
-                        gender     = validated_data['gender'],
-                        born_date  = validated_data['born_date'],
-                        country    = validated_data['country'],
-                        avatar     = validated_data['avatar'],
-                        bio        = validated_data['bio'],
-                        website    = validated_data['website']
+                        email      = validated_data.get('email'),
+                        username   = validated_data.get('username'),
+                        first_name = validated_data.get('first_name'),
+                        last_name  = validated_data.get('last_name'),
+                        gender     = validated_data.get('gender'),
+                        born_date  = validated_data.get('born_date'),
+                        country    = validated_data.get('country'),
+                        avatar     = validated_data.get('avatar'),
+                        bio        = validated_data.get('bio'),
+                        website    = validated_data.get('website'),
         )
         user.set_password(validated_data['password'])
         user.save()

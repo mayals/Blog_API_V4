@@ -9,8 +9,8 @@ import uuid
 #----------------------------------------[  Category  ]----------------------------------------------------#
 class Category(models.Model):
     id          = models.UUIDField(primary_key=True, editable=False,default=uuid.uuid4)
-    name        = models.CharField(max_length=20, editable=False, unique=True,blank=False)
-    slug        = models.SlugField(max_length=25, blank=True)
+    name        = models.CharField(max_length=20, editable=False, unique=True,blank=False,null=True)
+    slug        = models.SlugField(max_length=25, blank=True,null=True)
     description = models.TextField(null =True,blank=True)
     date_add    = models.DateTimeField(auto_now=False, auto_now_add=True)
     date_update = models.DateTimeField(auto_now=True,  auto_now_add=False)
@@ -72,8 +72,8 @@ class Post(models.Model):
 #----------------------------------------[  Tag  ]----------------------------------------------------#
 class Tag(models.Model):
     id          = models.UUIDField(primary_key=True, editable=False,default=uuid.uuid4)
-    word        = models.CharField(max_length=35,unique=True, blank=False)
-    slug        = models.SlugField(max_length=25, blank=True)
+    word        = models.CharField(max_length=35,unique=True, blank=False,null=True)
+    slug        = models.SlugField(max_length=25, blank=True,null=True)
     date_add    = models.DateTimeField(auto_now=False, auto_now_add=True, null=True)
 
     def __str__(self):
