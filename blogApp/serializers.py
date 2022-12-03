@@ -43,6 +43,9 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
         instance.save()
         return instance 
     
+
+
+
     
 class TagSerializer(serializers.HyperlinkedModelSerializer):
     # related_name -->> come from mManyToManyField in Post model  
@@ -52,6 +55,8 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
         model  = Tag 
         fields = ['id','word','posts_tags'] 
         read_only_fields = ('id','posts_tags')
+
+
 
 
 

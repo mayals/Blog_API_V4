@@ -72,7 +72,7 @@ class Post(models.Model):
 #----------------------------------------[  Tag  ]----------------------------------------------------#
 class Tag(models.Model):
     id          = models.UUIDField(primary_key=True, editable=False,default=uuid.uuid4)
-    word        = models.CharField(max_length=35,unique=True, blank=False,null=True)
+    word        = models.CharField(max_length=35,unique=True, blank=False)
     slug        = models.SlugField(max_length=25, blank=True,null=True)
     date_add    = models.DateTimeField(auto_now=False, auto_now_add=True, null=True)
 
