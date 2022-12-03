@@ -38,23 +38,23 @@ class Category(models.Model):
 #----------------------------------------[  Post  ]----------------------------------------------------#
 class Post(models.Model):
     id            = models.UUIDField(primary_key=True, editable=False,default=uuid.uuid4)
-    category      = models.ForeignKey(Category,on_delete=models.CASCADE,null=True,blank=False,related_name="posts_category")
     title         = models.CharField(max_length=20, editable=False, null=True,blank=False)
     slug          = models.SlugField(max_length=25, blank=True, null=True)
-    author        = models.ForeignKey('authApp.UserModel',on_delete=models.CASCADE,related_name='posts_author',null=True,blank=False)
     body          = models.TextField(null=True,blank=False)
     date_add      = models.DateTimeField(auto_now=False, auto_now_add=True)
     date_update   = models.DateTimeField(auto_now=True,  auto_now_add=False)
-    likes         = models.ManyToManyField('authApp.UserModel', related_name='posts_likes', blank=True)
+    # ForeignKey
+    category      = models.ForeignKey(Category,on_delete=models.CASCADE,null=True,blank=False,related_name="posts_category")
+    author        = models.ForeignKey('authApp.UserModel',on_delete=models.CASCADE,related_name='posts_author',null=True,blank=False)
+    # ManyToManyField
+    likes         = models.ManyToManyField('authApp.UserModel', related_name='users_likes', blank=True)
     tags          = models.ManyToManyField('Tag', related_name='posts_tags', blank=True)
-
-    
+ 
     def number_of_likes(self):
         return self.likes.count()
 
     def __str__(self):
         return str(self.title) 
-    
     class Meta:
         ordering = ['-date_add', 'author']
         unique_together = ['title', 'author']
@@ -82,6 +82,10 @@ class Tag(models.Model):
     class Meta:
         ordering = ['-date_add']
 
+        
+    def get_absolute_url(self):
+        return reverse('blogApp:tag-detail', kwargs = {"slug":self.slug})  
+
     def save(self, *args, **kwargs):  
         self.slug = slugify(self.word)
         super().save(*args, **kwargs)  # Call the "real" save() method.
@@ -92,17 +96,21 @@ class Tag(models.Model):
 #----------------------------------------[  Comment  ]----------------------------------------------------#
 class Comment(models.Model):
     id          = models.UUIDField(primary_key=True, editable=False,default=uuid.uuid4)
-    post        = models.ForeignKey(Post,on_delete=models.CASCADE,null=True,blank=False,related_name="comments_post")
     text        = models.TextField(null=True,blank=False)
-    comment_by  = models.ForeignKey('authApp.UserModel',on_delete=models.CASCADE,related_name='comments_author',null=True,blank=False)
     allowed     = models.BooleanField(default=True)
     date_add    = models.DateTimeField(auto_now=False, auto_now_add=True)
-    date_update = models.DateTimeField(auto_now=True,  auto_now_add=False)
+    date_update = models.DateTimeField(auto_now=True,  auto_now_add=False) 
+    # ForeignKey
+    post        = models.ForeignKey(Post,on_delete=models.CASCADE,null=True,blank=False,related_name="comments_post")  
+    comment_by  = models.ForeignKey('authApp.UserModel',on_delete=models.CASCADE,related_name='comments_author',null=True,blank=False)
     
     def __str__(self):
         return f'"{self.text}" by author:{self.comment_by}'
-
     class Meta:
         ordering = ['-date_add']
+
+        
+    def get_absolute_url(self):
+        return reverse('blogApp:comment-detail', kwargs = {"pk":self.id})  
 
 

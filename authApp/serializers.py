@@ -38,23 +38,30 @@ class RegisterSerializer(serializers.HyperlinkedModelSerializer):
                                       help_text='Password must be more than 8 Characters.',
                                       style={'input_type': 'password', 'placeholder': 'Password2'}
     )
+    # url - mean -> UserModel detail and use HyperlinkedIdentityField
     url = serializers.HyperlinkedIdentityField(read_only=True,
                                                view_name='authApp:UserModel-detail',
                                                lookup_field='username',
                                               
     )
+    # related_name -->> come from ForeignKey in Post model
     posts_author =  serializers.HyperlinkedRelatedField(read_only=True,
                                                         view_name='blogApp:post-detail', 
                                                         many=True,
                                                         lookup_field='slug'
     )
+    # related_name -->> come from ForeignKey in Comment model
     comments_author =  serializers.HyperlinkedRelatedField(read_only=True,
                                                         view_name='blogApp:comment-detail', 
                                                         many=True,
+                                                        lookup_field='id'
+    )
+    # related_name -->> come from mManyToManyField in Post model 
+    users_likes = serializers.HyperlinkedRelatedField(read_only=True,
+                                                        view_name='blogApp:post-detail', 
+                                                        many=True,
                                                         lookup_field='slug'
     )
-    
-
     class Meta:
         model  = UserModel 
         fields = [
@@ -63,7 +70,7 @@ class RegisterSerializer(serializers.HyperlinkedModelSerializer):
             'url','posts_author','comments_author','favorites'
         ]
         write_only_fields = ['password','password2']
-        read_only_fields = ['url','posts_author','comments_author',]
+        read_only_fields = ['url','posts_author','comments_author','likes_author']
         # extra_kwargs = {'password': {'write_only': True}}
         
         extra_kwargs = {
@@ -192,7 +199,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     comments_author =  serializers.HyperlinkedRelatedField(read_only=True,
                                                         view_name='blogApp:comment-detail', 
                                                         many=True,
-                                                        lookup_field='slug'
+                                                        lookup_field='id'
     )
     
 
